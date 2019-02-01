@@ -64,7 +64,7 @@ export default StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
-    backgroundColor: commonStyles.colors.black
+    backgroundColor: commonStyles.colors.primary
   },
   tabButtonPrimary: {
     width: '33.3333333%',
@@ -120,7 +120,7 @@ export default StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   loginLogo: {
-    width: 310,
+    width: 285,
     height: 190,
     marginVertical: 75,
   },
@@ -137,8 +137,9 @@ export default StyleSheet.create({
   },
   loginButtonText:{
     color: '#FFF',
-    fontSize: 18,
-    marginHorizontal: 20
+    fontSize: 16,
+    marginLeft: 10,
+    marginRight: 20,
   },
   loginButtonIcon: {
     marginLeft: 20

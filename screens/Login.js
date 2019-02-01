@@ -45,7 +45,7 @@ export default class Login extends Component {
             <TouchableOpacity
               style={styles.loginButton}
               onPress={() => callFacebookGraph(this._handleFacebookResponse)}>
-                <Icon style={styles.loginButtonIcon} name="facebook-f" color="#fff" size={25}/>
+                <Icon style={styles.loginButtonIcon} name="facebook-f" color="#fff" size={20}/>
                 <Text style={styles.loginButtonText}> Entrar com o Facebook! </Text>
             </TouchableOpacity>
         </View>
