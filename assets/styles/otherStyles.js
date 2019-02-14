@@ -113,11 +113,24 @@ export default StyleSheet.create({
 
   ///////////////// LOGIN SCREEN /////////////////
 
-  loginContainer: {
+  PINfeedback: {
+    fontSize: 25,
+    marginVertical: 20,
+    alignSelf: 'center'
+  },
+  pinContainer: {
     flex: 1,
     justifyContent: 'center',
+    backgroundColor: commonStyles.colors.white,
+  },
+  loginContainer: {
+    flex: 1,
+    height: '100%',
+    paddingTop: 50,
+    paddingBottom: 50,
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: commonStyles.colors.white
   },
   loginLogo: {
     width: 285,
@@ -125,10 +138,11 @@ export default StyleSheet.create({
     marginVertical: 75,
   },
   loginButton: {
+    width: '75%',
     height: 50,
     padding: 10,
     borderRadius: 50,
-    marginBottom: 75,
+    marginBottom: 15,
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
@@ -136,13 +150,71 @@ export default StyleSheet.create({
     backgroundColor: commonStyles.colors.primary
   },
   loginButtonText:{
-    color: '#FFF',
+    color: commonStyles.colors.white,
     fontSize: 16,
     marginLeft: 10,
     marginRight: 20,
   },
   loginButtonIcon: {
     marginLeft: 20
+  },
+
+  aboutLogo: {
+    width: 180,
+    height: 80,
+    marginVertical: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
+  backButton: {
+    width: '75%',
+    height: 50,
+    padding: 10,
+    borderRadius: 50,
+    marginTop: 45,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    backgroundColor: commonStyles.colors.secondary
+  },
+  aboutButton: {
+    width: '75%',
+    height: 50,
+    padding: 10,
+    borderWidth: 2,
+    borderRadius: 50,
+    borderColor: commonStyles.colors.primary,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
+  aboutButtonText: {
+    fontSize: 16,
+    marginLeft: 10,
+    marginRight: 10,
+    color: commonStyles.colors.primary
+  },
+  aboutTitle: {
+    fontSize: 19,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: commonStyles.colors.secondary
+  },
+  aboutText: {
+    padding: 30,
+    fontSize: 16,
+    textAlign: 'justify',
+    color: commonStyles.colors.neutral
+  },
+  devByText: {
+    color: commonStyles.colors.neutral,
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 
   ///////////////// PERFIL SCREEN /////////////////
@@ -180,11 +252,11 @@ export default StyleSheet.create({
   welcomeText: {
     textAlign: 'center',
     fontSize: 20,
-    color: '#fff',
+    color: commonStyles.colors.white,
   },
   welcomeSubText: {
     fontSize: 25,
-    color: '#fff',
+    color: commonStyles.colors.white,
     textAlign: 'center'
   },
   inlineFlexRowUserInfo: {
@@ -224,10 +296,10 @@ export default StyleSheet.create({
     borderRadius: 50,
   },
   SubText: {
-      fontSize: 20,
-      color: '#fff',
-      textAlign: 'center',
-      marginTop: 15,
+    fontSize: 20,
+    color: commonStyles.colors.white,
+    textAlign: 'center',
+    marginTop: 15,
   },
 
   det: {
@@ -415,7 +487,7 @@ export default StyleSheet.create({
     backgroundColor: commonStyles.colors.lightGrey
   },
   btnTxt: {
-    color: '#fff',
+    color: commonStyles.colors.white,
     textAlign: 'center',
   },
 
@@ -472,7 +544,7 @@ export default StyleSheet.create({
   },
   data: {
       fontSize: 15,
-      color: '#fff',
+      color: commonStyles.colors.white,
   }, 
 
   ///////////////// Dialogs /////////////////

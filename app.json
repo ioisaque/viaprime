@@ -21,11 +21,13 @@
       "**/*"
     ],
     "ios": {
-      "buildNumber": "5",
+      "buildNumber": "6",
       "supportsTablet": false,
       "bundleIdentifier": "pro.sige.viathletica"
     },
     "android": {
+      "versionCode": 1,
+      "permissions": [],
       "package": "pro.sige.viathletica"
     }
   }

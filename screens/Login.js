@@ -44,9 +44,20 @@ export default class Login extends Component {
 
             <TouchableOpacity
               style={styles.loginButton}
+              onPress={() => navigate('PIN')}>
+                <Icon style={styles.loginButtonIcon} name="key" color="#fff" size={20}/>
+                <Text style={styles.loginButtonText}> Entrar com o PIN! </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.loginButton}
               onPress={() => callFacebookGraph(this._handleFacebookResponse)}>
                 <Icon style={styles.loginButtonIcon} name="facebook-f" color="#fff" size={20}/>
                 <Text style={styles.loginButtonText}> Entrar com o Facebook! </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.aboutButton} onPress={() => navigate('appInfo')}>
+              <Text style={styles.aboutButtonText}> Quem somos </Text>
             </TouchableOpacity>
         </View>
       )
@@ -56,9 +67,11 @@ export default class Login extends Component {
   _getLocalLoginInfo = (loginData) => {      
     //console.log('RUNNING => @_getLocalLogin()', loginData)
     
-    if (loginData.email_aluno != null) {
+    console.log(loginData)
+
+    if (loginData.pin_aluno != null || loginData.email_aluno != null) {
       globalState.alunoInfo = loginData
-      loginOnWebservice(globalState.alunoInfo.email_aluno, globalState.alunoInfo.nome_aluno, globalState.alunoInfo.foto_aluno, this._finishLoginToRedirect)
+      loginOnWebservice(this._finishLoginToRedirect)
     }else{
       this.setState({ isLoading: false })
     }
@@ -92,34 +105,54 @@ export default class Login extends Component {
       _storeLoginData('foto_aluno',  globalState.alunoInfo.foto_aluno)
       _storeLoginData('facebookID_aluno', globalState.alunoInfo.facebookID_aluno)
   
-      loginOnWebservice(globalState.alunoInfo.email_aluno, globalState.alunoInfo.nome_aluno, globalState.alunoInfo.foto_aluno, this._finishLoginToRedirect)      
+      loginOnWebservice(this._finishLoginToRedirect)      
   }
 }
 
-async function loginOnWebservice( sEmail = '', sNome = '', sFoto = '', callback ) {
-  //console.log('RUNNING => @loginOnWebservice()')
+// LogIn Webservice: Faz a requisição ao webservice para logar ou atualizar as listas de aulas.
+async function loginOnWebservice( callback ) {
+  console.log('RUNNING => @loginOnWebservice()')
 
-  let result = await fetch('http://fabriciano.crossfitweb.com.br/app/login_facebook.php', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      email: sEmail,
-      nome: sNome,
-      foto: sFoto
-    }),
-  }).then((response) => {        
-   return response.json()
-  }).then((responseJson) => {
-      callback(responseJson)
-    })
-    .catch((error) => {
-      console.error(error)
-  });
-  
-  return result
+  if (globalState.alunoInfo.pin_aluno)
+  {
+    await fetch('http://fabriciano.crossfitweb.com.br/app/login_facebook.php', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        pin: globalState.alunoInfo.pin_aluno
+      }),
+    }).then((response) => {        
+     return response.json()
+    }).then((responseJson) => {
+        callback(responseJson)
+      })
+      .catch((error) => {
+        console.error(error)
+    });
+  }else{
+    await fetch('http://fabriciano.crossfitweb.com.br/app/login_facebook.php', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: globalState.alunoInfo.email_aluno,
+        nome: globalState.alunoInfo.nome_aluno,
+        foto: globalState.alunoInfo.foto_aluno
+      }),
+    }).then((response) => {        
+     return response.json()
+    }).then((responseJson) => {
+        callback(responseJson)
+      })
+      .catch((error) => {
+        console.error(error)
+    });
+  }
 };
 
 async function callFacebookGraph( callback ) {
@@ -160,12 +193,15 @@ _retrieveLoginData = async (callback) => {
   //console.log('RUNNING => @_retrieveLoginData()')
   try {
     let values = {
-        id_aluno:         await AsyncStorage.getItem('crossfitLogin_id_aluno'),
-        nome_aluno:       await AsyncStorage.getItem('crossfitLogin_nome_aluno'),
-        email_aluno:      await AsyncStorage.getItem('crossfitLogin_email_aluno'),
-        foto_aluno:       await AsyncStorage.getItem('crossfitLogin_foto_aluno'),
-        facebookID_aluno: await AsyncStorage.getItem('crossfitLogin_facebookID_aluno')
+      pin_aluno:          await AsyncStorage.getItem('crossfitLogin_pin_aluno'),
+      id_aluno:           await AsyncStorage.getItem('crossfitLogin_id_aluno'),
+      nome_aluno:         await AsyncStorage.getItem('crossfitLogin_nome_aluno'),
+      email_aluno:        await AsyncStorage.getItem('crossfitLogin_email_aluno'),
+      foto_aluno:         await AsyncStorage.getItem('crossfitLogin_foto_aluno'),
+      facebookID_aluno:   await AsyncStorage.getItem('crossfitLogin_facebookID_aluno')
     }
+    values.nome_aluno = values.nome_aluno ? values.nome_aluno : 'Aluno'
+
     if (values !== null) {
       //console.log('Retrived crossfitLogin_ => ', values)
       callback(values)

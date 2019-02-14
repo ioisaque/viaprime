@@ -55,7 +55,7 @@ export default class Welcome extends Component{
       }
 
       if (this.state.isLoading == true) {
-        logInWebservice(globalState.alunoInfo.email_aluno, globalState.alunoInfo.nome_aluno, globalState.alunoInfo.foto_aluno, this._UpdateAulasAgendadas)
+        logInWebservice(this._UpdateAulasAgendadas)
         
         return(
           <View style={styles.perfilContainer}>
@@ -67,7 +67,7 @@ export default class Welcome extends Component{
                 <Image style={styles.headerLogoVA} source={require('../assets/logoVA.png')}/>
 
                 <View style={styles.inlineFlexRowUserInfo}>
-                  <Image style={styles.profilePic} source={{uri: globalState.alunoInfo.foto_aluno}}/>
+                <Image style={styles.profilePic} source={!globalState.alunoInfo.foto_aluno ? require('../assets/user_placeholder.png') : {uri: globalState.alunoInfo.foto_aluno}}/>
                   <Text style={styles.welcomeText}> Olá, {globalState.alunoInfo.nome_aluno.split(' ', 1)}! </Text>
                 </View>
               </View>
@@ -75,7 +75,7 @@ export default class Welcome extends Component{
               <View style={styles.inlineFlexRowBetween}>
                 <Text style={styles.welcomeSubText}>Minhas Aulas</Text>
 
-                <TouchableOpacity style={styles.refreshButton} onPress={() => this._handlelogInWebservice} >
+                <TouchableOpacity style={styles.refreshButton} onPress={this._handlelogInWebservice} >
                   <Icon name="refresh" color={commonStyles.colors.white} size={20}/>
                 </TouchableOpacity>
               </View>
@@ -100,7 +100,7 @@ export default class Welcome extends Component{
                 <Image style={styles.headerLogoVA} source={require('../assets/logoVA.png')}/>
 
                 <View style={styles.inlineFlexRowUserInfo}>
-                  <Image style={styles.profilePic} source={{uri: globalState.alunoInfo.foto_aluno}}/>
+                  <Image style={styles.profilePic} source={!globalState.alunoInfo.foto_aluno ? require('../assets/user_placeholder.png') : {uri: globalState.alunoInfo.foto_aluno}}/>
                   <Text style={styles.welcomeText}> Olá, {globalState.alunoInfo.nome_aluno.split(' ', 1)}! </Text>
                 </View>
               </View>
@@ -366,7 +366,7 @@ export default class Welcome extends Component{
       console.log('RUNNING => @_handlelogInWebservice()')
       this.setState({ isLoading : true })
 
-      logInWebservice(globalState.alunoInfo.email_aluno, globalState.alunoInfo.nome_aluno, globalState.alunoInfo.foto_aluno, this._UpdateAulasAgendadas)
+      logInWebservice(this._UpdateAulasAgendadas)
     }
 
     _RemoverDatasDuplicadas(lista) {
@@ -473,26 +473,47 @@ async function DesmarcarAula(aula_id, aluno_id, callback ) {
 };
 
 // LogIn Webservice: Faz a requisição ao webservice para logar ou atualizar as listas de aulas.
-async function logInWebservice( sEmail = '', sNome = '', sFoto = '', callback ) {
+async function logInWebservice( callback ) {
   console.log('RUNNING => @logInWebservice()')
 
-  await fetch('http://fabriciano.crossfitweb.com.br/app/login_facebook.php', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      email: sEmail,
-      nome: sNome,
-      foto: sFoto
-    }),
-  }).then((response) => {        
-   return response.json()
-  }).then((responseJson) => {
-      callback(responseJson)
-    })
-    .catch((error) => {
-      console.error(error)
-  });
+  if (globalState.alunoInfo.pin_aluno)
+  {
+    await fetch('http://fabriciano.crossfitweb.com.br/app/login_facebook.php', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        pin: globalState.alunoInfo.pin_aluno
+      }),
+    }).then((response) => {        
+     return response.json()
+    }).then((responseJson) => {
+        callback(responseJson)
+      })
+      .catch((error) => {
+        console.error(error)
+    });
+  }else{
+    await fetch('http://fabriciano.crossfitweb.com.br/app/login_facebook.php', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: globalState.alunoInfo.email_aluno,
+        nome: globalState.alunoInfo.nome_aluno,
+        foto: globalState.alunoInfo.foto_aluno
+      }),
+    }).then((response) => {        
+     return response.json()
+    }).then((responseJson) => {
+        callback(responseJson)
+      })
+      .catch((error) => {
+        console.error(error)
+    });
+  }
 };

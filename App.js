@@ -1,20 +1,24 @@
 // Arquivos das telas
+import PIN from './screens/PIN'
 import Login from './screens/Login'
 import Logout from './screens/Logout'
 import Dias from './screens/AulasDisponiveis'
 import Horas from './screens/HorasDisponiveis'
 import Welcome from './screens/Welcome'
+import appInfo from './screens/appInfo'
 
 import { createStackNavigator } from 'react-navigation'
 import commonStyles from './assets/styles/commonStyles';
 
 const navigator = createStackNavigator (
   {
+    PIN: PIN,
     Login: Login,
     Logout: Logout,
     Dias: Dias,
     Horas: Horas,
     Welcome: Welcome,
+    appInfo: appInfo,
   },
   {
     initialRouteName: 'Login',
@@ -61,11 +65,12 @@ export const globalState = {
   },
     
   alunoInfo: {
-    id_aluno: undefined,
-    nome_aluno: undefined,
-    email_aluno: undefined,
-    foto_aluno: undefined,
-    facebookID_aluno: undefined
+    id_aluno: 0,
+    pin_aluno: 0,
+    nome_aluno: 'Aluno',
+    email_aluno: false,
+    foto_aluno: false,
+    facebookID_aluno: false
   },
 
   aulasAgendadas:[],
