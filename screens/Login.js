@@ -115,7 +115,7 @@ async function loginOnWebservice( callback ) {
 
   if (globalState.alunoInfo.pin_aluno)
   {
-    await fetch('http://viaprime.sige.pro/app/login_facebook.php', {
+    await fetch('https://viaprime.sige.pro/app/login_facebook.php', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -133,7 +133,7 @@ async function loginOnWebservice( callback ) {
         console.error(error)
     });
   }else{
-    await fetch('http://viaprime.sige.pro/app/login_facebook.php', {
+    await fetch('https://viaprime.sige.pro/app/login_facebook.php', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
