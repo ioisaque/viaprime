@@ -334,7 +334,7 @@ export default class Horas extends Component{
 async function changeAulaStatusTo( id, aula_id, aluno_id, callback ) {
   //console.log('RUNNING => @changeAulaStatusTo()')
 
-  let result = await fetch('http://fabriciano.crossfitweb.com.br/app/aulas.php', {
+  let result = await fetch('http://viaprime.sige.pro/app/aulas.php', {
     method: 'POST',
     headers: {
       Accept: 'application/json',

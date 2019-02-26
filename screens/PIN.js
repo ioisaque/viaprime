@@ -66,7 +66,7 @@ export default class PIN extends Component {
 async function loginOnWebservice( PIN = '00000', clear, callback ) {
   console.log('RUNNING => @loginOnWebservice()', `[${PIN}]`)
 
-  await fetch('http://fabriciano.crossfitweb.com.br/app/login_facebook.php', {
+  await fetch('http://viaprime.sige.pro/app/login_facebook.php', {
     method: 'POST',
     headers: {
       Accept: 'application/json',

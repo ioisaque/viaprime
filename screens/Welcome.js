@@ -447,7 +447,7 @@ export default class Welcome extends Component{
 async function DesmarcarAula(aula_id, aluno_id, callback ) {
   console.log('RUNNING => @DesmarcarAula()')
 
-  let result = await fetch('http://fabriciano.crossfitweb.com.br/app/aulas.php', {
+  let result = await fetch('http://viaprime.sige.pro/app/aulas.php', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -478,7 +478,7 @@ async function logInWebservice( callback ) {
 
   if (globalState.alunoInfo.pin_aluno)
   {
-    await fetch('http://fabriciano.crossfitweb.com.br/app/login_facebook.php', {
+    await fetch('http://viaprime.sige.pro/app/login_facebook.php', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -496,7 +496,7 @@ async function logInWebservice( callback ) {
         console.error(error)
     });
   }else{
-    await fetch('http://fabriciano.crossfitweb.com.br/app/login_facebook.php', {
+    await fetch('http://viaprime.sige.pro/app/login_facebook.php', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
