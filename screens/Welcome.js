@@ -20,7 +20,8 @@ export default class Welcome extends Component{
       header: null,
       headerLeft: (null),
       headerTitle: (null),
-      headerRight: (null)
+      headerRight: (null),
+      gesturesEnabled: false
     }
 
     constructor(props) {

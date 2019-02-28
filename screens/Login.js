@@ -1,12 +1,13 @@
-import React, {Component} from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { Alert, AsyncStorage, View, Text, TouchableOpacity, Image, ActivityIndicator, } from 'react-native';
+import React, {Component} from 'react'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { AsyncStorage, View, Text, TouchableOpacity, Image, ActivityIndicator, TextInput, } from 'react-native'
 
-import styles from '../assets/styles/otherStyles';
-import commonStyles from '../assets/styles/commonStyles';
+import styles from '../assets/styles/otherStyles'
+import commonStyles from '../assets/styles/commonStyles'
 
 import 'expo';
-import { globalState } from '../App';
+import { globalState } from '../App'
+import KeyboardShift from './components/KeyboardShift'
 
 export default class Login extends Component {
   
@@ -16,10 +17,11 @@ export default class Login extends Component {
   }
 
   constructor(props){
-      super(props)
+    super(props)
   }
   
   state = {
+    email: 'isaquecostaa@gmail.com',
     isLoading: true
   };
 
@@ -39,7 +41,9 @@ export default class Login extends Component {
       )
     }else{
       return(
-        <View style={styles.loginContainer}>
+        <KeyboardShift>
+        {() => (
+          <View style={styles.loginContainer}>
             <Image style={styles.loginLogo} source={require('../assets/logo-login.png')}></Image>
 
             <TouchableOpacity
@@ -49,25 +53,36 @@ export default class Login extends Component {
                 <Text style={styles.loginButtonText}> Entrar com o PIN! </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.loginButton}
-              onPress={() => callFacebookGraph(this._handleFacebookResponse)}>
-                <Icon style={styles.loginButtonIcon} name="facebook-f" color="#fff" size={20}/>
-                <Text style={styles.loginButtonText}> Entrar com o Facebook! </Text>
-            </TouchableOpacity>
+            <View style={styles.groupInputBtn}>
+              <TextInput style={styles.leftedInputText} onChangeText={text => this.setState({email: text})} value="isaquecostaa@gmail.com" placeholder={'E-mail'} keyboardType={'email-address'}></TextInput>
+
+              <TouchableOpacity style={styles.rightedGoBtn} onPress={this.loginWithEmail}>
+                <Icon style={styles.loginButtonIcon} name="sign-in" color="#fff" size={20}/>
+              </TouchableOpacity>
+            </View>
 
             <TouchableOpacity style={styles.aboutButton} onPress={() => navigate('appInfo')}>
               <Text style={styles.aboutButtonText}> Quem somos </Text>
             </TouchableOpacity>
-        </View>
+          </View>
+        )}</KeyboardShift>
       )
     }
   }
 
+  loginWithEmail = () => {      
+    console.log('RUNNING => @loginWithEmail()')
+
+    this.setState({ isLoading: true })
+
+    if(!globalState.alunoInfo.email_aluno)
+      globalState.alunoInfo.email_aluno = this.state.email
+
+    loginOnWebservice(this._finishLoginToRedirect)
+  }
+
   _getLocalLoginInfo = (loginData) => {      
-    //console.log('RUNNING => @_getLocalLogin()', loginData)
-    
-    console.log(loginData)
+    console.log('RUNNING => @_getLocalLoginInfo()')
 
     if (loginData.pin_aluno != null || loginData.email_aluno != null) {
       globalState.alunoInfo = loginData
@@ -78,34 +93,20 @@ export default class Login extends Component {
   }
 
   _finishLoginToRedirect = (result) => {
-    //console.log('RUNNING => @_finishLoginToRedirect()')
+    console.log('RUNNING => @_finishLoginToRedirect()')
+
+    this.setState({ isLoading: false })
     
       globalState.alunoInfo.id_aluno = result.id_aluno
       _storeLoginData('id_aluno', globalState.alunoInfo.id_aluno)
+
+      _storeLoginData('email_aluno', globalState.alunoInfo.email_aluno)
 
       globalState.alunoInfo.registro_aula = result.registro_aula
       _storeLoginData('registro_aula', globalState.alunoInfo.registro_aula)
 
     const { navigate } = this.props.navigation
     navigate('Welcome')
-  }
-  
-  _handleFacebookResponse = (result) => {
-    //console.log('RUNNING => @_handleFacebookResponse')
-
-      this.setState({ isLoading: true })
-
-      globalState.alunoInfo.facebookID_aluno = result.id
-      globalState.alunoInfo.nome_aluno = result.name
-      globalState.alunoInfo.email_aluno = result.email
-      globalState.alunoInfo.foto_aluno = 'https://graph.facebook.com/'+ result.id +'/picture?type=large'
-
-      _storeLoginData('email_aluno', globalState.alunoInfo.email_aluno)
-      _storeLoginData('nome_aluno',  globalState.alunoInfo.nome_aluno)
-      _storeLoginData('foto_aluno',  globalState.alunoInfo.foto_aluno)
-      _storeLoginData('facebookID_aluno', globalState.alunoInfo.facebookID_aluno)
-  
-      loginOnWebservice(this._finishLoginToRedirect)      
   }
 }
 
@@ -140,9 +141,7 @@ async function loginOnWebservice( callback ) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email: globalState.alunoInfo.email_aluno,
-        nome: globalState.alunoInfo.nome_aluno,
-        foto: globalState.alunoInfo.foto_aluno
+        email: globalState.alunoInfo.email_aluno
       }),
     }).then((response) => {        
      return response.json()
@@ -155,33 +154,9 @@ async function loginOnWebservice( callback ) {
   }
 };
 
-async function callFacebookGraph( callback ) {
-  //console.log('RUNNING => @callFacebookGraph()')
-  const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('354176225132574', {
-    // behavior: 'web',
-    permissions: ['public_profile', 'email'], 
-  });
-
-  if (type === 'success') {
-    let result = await fetch('https://graph.facebook.com/me?access_token='+token+'&fields=id,name,email,about,picture')
-    .then((response) => {  
-     return response.json()
-    }).then((responseJson) => {
-        callback(responseJson)
-      })
-      .catch((error) => {
-        console.error(error)
-    });
-    
-    return result
-  }else{
-    console.log('Login Error => ', type)  
-  }
-};
-
 // LOCAL STORAGE
 _storeLoginData = async (key, value) => {
-  //console.log('RUNNING => @_storeLoginData()', key + ' = ' + value)
+  console.log('RUNNING => @_storeLoginData()', key + ' = ' + value)
   try {
     await AsyncStorage.setItem('crossfitLogin_'+key, value.toString())
   } catch (error) {
@@ -190,20 +165,17 @@ _storeLoginData = async (key, value) => {
 }
 
 _retrieveLoginData = async (callback) => {
-  //console.log('RUNNING => @_retrieveLoginData()')
+  console.log('RUNNING => @_retrieveLoginData()')
   try {
     let values = {
       pin_aluno:          await AsyncStorage.getItem('crossfitLogin_pin_aluno'),
       id_aluno:           await AsyncStorage.getItem('crossfitLogin_id_aluno'),
-      nome_aluno:         await AsyncStorage.getItem('crossfitLogin_nome_aluno'),
       email_aluno:        await AsyncStorage.getItem('crossfitLogin_email_aluno'),
-      foto_aluno:         await AsyncStorage.getItem('crossfitLogin_foto_aluno'),
-      facebookID_aluno:   await AsyncStorage.getItem('crossfitLogin_facebookID_aluno')
     }
     values.nome_aluno = values.nome_aluno ? values.nome_aluno : 'Aluno'
 
     if (values !== null) {
-      //console.log('Retrived crossfitLogin_ => ', values)
+      console.log('Retrived crossfitLogin_ => ', values)
       callback(values)
     }
    } catch (error) {

@@ -69,8 +69,6 @@ export const globalState = {
     pin_aluno: 0,
     nome_aluno: 'Aluno',
     email_aluno: false,
-    foto_aluno: false,
-    facebookID_aluno: false
   },
 
   aulasAgendadas:[],

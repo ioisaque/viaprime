@@ -159,6 +159,35 @@ export default StyleSheet.create({
     marginLeft: 20
   },
 
+  groupInputBtn: {
+    marginBottom: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'space-around',
+  },
+
+  leftedInputText: {
+    width: '60%',
+    height: 50,
+    padding: 10,
+    paddingHorizontal: 20,
+    borderWidth: 2,
+    borderTopLeftRadius: 50,
+    borderBottomLeftRadius: 50,
+    borderColor: commonStyles.colors.primary
+  },
+
+  rightedGoBtn: {
+    width: '15%',
+    height: 50,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    borderTopRightRadius: 50,
+    borderBottomRightRadius: 50,
+    backgroundColor: commonStyles.colors.primary
+  },
+
   aboutLogo: {
     width: 180,
     height: 80,
